@@ -1,11 +1,18 @@
-import React from 'react'
-import AppLayout from "../component/AppLayout";
+import React from 'react';
+import { useSelector } from 'react-redux';
+import AppLayout from '../component/AppLayout';
+import PostForm from '../component/PostForm';
+import PostCard from '../component/PostCard';
 
-const Home = () => {
+function Home() {
+  const { me } = useSelector((state) => state.user);
+  const { mainPosts } = useSelector((state) => state.post);
+
   return (
-      <AppLayout>
-        <div>Hello, Next!</div>
-      </AppLayout>
+    <AppLayout>
+      {me && <PostForm />}
+      {mainPosts.map((post) => <PostCard key={post.id} post={post} />)}
+    </AppLayout>
   );
 }
 

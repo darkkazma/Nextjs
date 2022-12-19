@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
-import {Button, Form, Input} from 'antd';
+import { Button, Form, Input } from 'antd';
 import Link from 'next/link';
-import styled from 'styled-components'
-import { useDispatch } from "react-redux";
-import useinput from "../hooks/useInput";
-import { loginAction } from "../reducers";
+import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import useInput from '../hooks/useInput';
+import { loginRequestAction } from '../reducers/user';
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
@@ -12,41 +12,58 @@ const ButtonWrapper = styled.div`
 
 const FormWrapper = styled(Form)`
   padding: 10px;
-`
+`;
 
 // eslint-disable-next-line react/prop-types
-const LoginForm = () => {
+function LoginForm() {
   const dispatch = useDispatch();
-  const[id, onChangeId] = useinput('');
-  const[password, onChangePassword] = useinput('');
+  const { logInLoading } = useSelector((state) => state.user);
+  const [email, onChangeEmail] = useInput('');
+  const [password, onChangePassword] = useInput('');
 
-
-  const onSubmitForm = useCallback( () => {
-    console.log(id, password);
-    dispatch(loginAction(id, password));
-
-  }, [id, password]);
+  const onSubmitForm = useCallback(() => {
+    console.log(email, password);
+    dispatch(loginRequestAction(email, password));
+  }, [email, password]);
 
   return (
-      <FormWrapper onFinish={onSubmitForm}>
-        <div>
-          <label htmlFor="user-id">아이디</label>
-          <br/>
-          <Input name="user-id" value={id} onChange={onChangeId} required />
-        </div>
-        <div>
-          <label htmlFor="user-password">패스워드</label>
-          <br/>
-          <Input name="user-password" value={password} onChange={onChangePassword} required />
-        </div>
-        <ButtonWrapper>
-          <Button type="primary" htmlType="submit" loading={false}>로그인</Button>
-          <Link href="/signup"><a><Button>회원가입</Button></a></Link>
-        </ButtonWrapper>
-        <div>
-
-        </div>
-      </FormWrapper>
+    <FormWrapper onFinish={onSubmitForm}>
+      <div>
+        <label htmlFor="user-email">이메일</label>
+        <br />
+        <Input
+          name="user-email"
+          type="email"
+          value={email}
+          onChange={onChangeEmail}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="user-password">패스워드</label>
+        <br />
+        <Input
+          name="user-password"
+          value={password}
+          onChange={onChangePassword}
+          required
+        />
+      </div>
+      <ButtonWrapper>
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={logInLoading}
+        >로그인
+        </Button>
+        <Link
+          href="/signup"
+          legacyBehavior
+        ><a><Button>회원가입</Button></a>
+        </Link>
+      </ButtonWrapper>
+      <div />
+    </FormWrapper>
   );
 }
 
