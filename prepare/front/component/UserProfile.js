@@ -20,7 +20,7 @@ const UserProfile = () => {
           avatar={<Avatar>{me?.nickname[0]}</Avatar>}
           title={me?.nickname}/>
 
-      <Button onClick={onLogOut} loading={logOutLoading}>로그아웃</Button>
+      <Button style={{ marginLeft: "45px" }} onClick={onLogOut} loading={logOutLoading}>로그아웃</Button>
     </Card>
   </>);
 }

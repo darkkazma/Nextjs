@@ -6,13 +6,18 @@ import {
   RetweetOutlined,
   HeartOutlined, HeartTwoTone,
 } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
+import {REMOVE_POST_REQUEST} from "../reducers/post";
 
 function PostCard({ post }) {
+
+  const dispatch = useDispatch();
+  const { removePostLoading } = useSelector((state) => state.post );
+
   const [linked, setLinked] = useState(false);
   const [commentFormOpend, setCommentFormOpend] = useState(false);
 
@@ -23,6 +28,14 @@ function PostCard({ post }) {
   const onToggleComment = useCallback(() => {
     setCommentFormOpend((prev) => !prev);
   }, []);
+
+
+  const onRemovePost = useCallback(() => {
+    dispatch({
+      type: REMOVE_POST_REQUEST,
+      data: post.id
+    });
+  },[])
 
   const id = useSelector((state) => state.user.me?.id);
 
@@ -50,7 +63,7 @@ function PostCard({ post }) {
                   ? (
                     <>
                       <Button> 수정 </Button>
-                      <Button type="danger">삭제</Button>
+                      <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>삭제</Button>
                     </>
                   )
                   : <Button>신고</Button>}
