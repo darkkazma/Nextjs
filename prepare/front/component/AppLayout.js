@@ -36,16 +36,16 @@ function AppLayout({ children }) {
     <div>
       <Global />
       <Menu mode="horizontal">
-        <Menu.Item>
+        <Menu.Item key="node-bird">
           <Link href="/" legacyBehavior><a>노드 버드</a></Link>
         </Menu.Item>
-        <Menu.Item>
+        <Menu.Item key="node-profile">
           <Link href="/profile" legacyBehavior><a>프로필</a></Link>
         </Menu.Item>
-        <Menu.Item>
+        <Menu.Item key="node-enter">
           <SearchInput enterButton />
         </Menu.Item>
-        <Menu.Item>
+        <Menu.Item key="node-signup">
           <Link href="/signup" legacyBehavior><a>회원 가입</a></Link>
         </Menu.Item>
       </Menu>

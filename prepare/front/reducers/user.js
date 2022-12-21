@@ -2,10 +2,16 @@ import {ADD_POST_TO_ME, REMOVE_POST_OF_ME} from "./post";
 import produce from 'immer';
 
 export const initialState = {
+  followLoading: false, // 팔로 시도중
+  followDone: false,
+  followError: null,
+  unfollowLoading: false, // 언팔로우 시도중
+  unfollowDone: false,
+  unfollowError: null,
   logInLoading: false, // 로그인 시도중
   logInDone: false,
   logInError: null,
-  logOutLoading: false, // 로그아웃 시도중
+  logOutLoading: false, // 로그아웃 시도중우
   logOutDone: false,
   logOutError: null,
   signUpLoading: false, // 회원가입 시도중
@@ -40,7 +46,7 @@ export const FOLLOW_SUCCESS = 'FOLLOW_SUCCESS';
 export const FOLLOW_FAILURE = 'FOLLOW_FAILURE';
 
 export const UNFOLLOW_REQUEST = 'UNFOLLOW_REQUEST';
-export const UNFOLLOR_SUCCESS = 'UNFOLLOW_SUCCESS';
+export const UNFOLLOW_SUCCESS = 'UNFOLLOW_SUCCESS';
 export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE';
 
 const dummyUser = (data) => ({
@@ -53,8 +59,9 @@ const dummyUser = (data) => ({
 });
 
 // 로그인 액션
-export const loginRequestAction = (data) => ({
-  type: 'LOG_IN_REQUEST', data,
+export const loginRequestAction = (email, password) => ({
+  type: 'LOG_IN_REQUEST',
+  data : { email : email, password: password },
 });
 /* export const loginSuccessAction = (data) => {
  return {
@@ -69,11 +76,41 @@ export const loginRequestAction = (data) => ({
 
 // 로그아웃 액션
 export const logoutRequestAction = () => ({
-  type: LOG_IN_REQUEST,
+  type: LOG_OUT_REQUEST,
 });
 
 const reducer = (state = initialState, action) => produce(state, (draft) => {
   switch (action.type) {
+    case FOLLOW_REQUEST:
+      draft.followLoading = true;
+      draft.followDone = false;
+      draft.followError = null;
+      break;
+    case FOLLOW_SUCCESS:
+      draft.followLoading = false;
+      draft.followDone = true;
+      draft.me.Followings.push({ id: action.data });
+      break;
+    case FOLLOW_FAILURE:
+      draft.followLoading = false;
+      draft.followError = action.error;
+      break;
+
+    case UNFOLLOW_REQUEST:
+      draft.unfollowLoading = true;
+      draft.unfollowDone = false;
+      draft.unfollowError = null;
+      break;
+    case UNFOLLOW_SUCCESS:
+      draft.unfollowLoading = false;
+      draft.unfollowDone = true;
+      draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data );
+      break;
+    case UNFOLLOW_FAILURE:
+      draft.unfollowLoading = false;
+      draft.unfollowError = action.error;
+      break;
+
     case LOG_IN_REQUEST:
       draft.logInLoading = true;
       draft.logInDone = false;
@@ -82,9 +119,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOG_IN_SUCCESS:
       draft.logInLoading = false;
       draft.logInDone = true;
-      draft.me = dummyUser(action.data);
+      draft.me = action.data;
       break;
-
     case LOG_IN_FAILURE:
       draft.logInLoading = false;
       draft.logInError = action.error;

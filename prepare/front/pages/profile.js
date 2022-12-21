@@ -1,16 +1,25 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import AppLayout from "../component/AppLayout";
 import Head from "next/head";
 import NickNameEditForm from "../component/NickNameEditForm";
 import FollowList from "../component/FollowList";
 import FollowerList from "../component/FollowerList";
 import { useSelector } from "react-redux";
+import Router from 'next/router';
 
 const Profile = () => {
   const {me} = useSelector((state) => state.user);
 
-  // const followingList = [{ nickname : "godti"}, { nickname: "1004da"}, {nickname: "아무개"}]
-  // const followerList = [{ nickname : "godti2"}, { nickname: "1004da2"}, {nickname: "아무개2"}]
+  useEffect(() => {
+      if( !(me && me.id) ){
+          Router.push('/');
+      }
+  }, [me && me.id]);
+
+
+  if( !me ){
+      return null;
+  }
   return (<>
         <Head>
           <title>내 프로필 | NodeBird</title>
