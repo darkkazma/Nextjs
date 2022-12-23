@@ -3,13 +3,20 @@ import {useDispatch, useSelector} from 'react-redux';
 import AppLayout from '../component/AppLayout';
 import PostForm from '../component/PostForm';
 import PostCard from '../component/PostCard';
-import {LOAD_POST_REQUEST} from "../reducers/post";
+import { LOAD_POST_REQUEST } from '../reducers/post';
+import { LOAD_USER_REQUEST } from '../reducers/user';
 
 function Home() {
 
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
   const { mainPosts, hasMorePosts, loadPostLoading } = useSelector((state) => state.post);
+
+  useEffect(() => {
+    dispatch({
+      type: LOAD_USER_REQUEST,
+    });
+  }, [])
 
   useEffect(() => {
       dispatch({

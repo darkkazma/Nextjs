@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
-import {REMOVE_POST_REQUEST} from "../reducers/post";
+import {LIKE_POST_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST} from "../reducers/post";
 import FollowButton from "./FollowButton";
 
 function PostCard({ post }) {
@@ -22,9 +22,21 @@ function PostCard({ post }) {
   const [linked, setLinked] = useState(false);
   const [commentFormOpend, setCommentFormOpend] = useState(false);
 
-  const onToggleLike = useCallback(() => {
-    setLinked((prev) => !prev);
-  }, []);
+  // const onToggleLike = useCallback(() => {
+  //   setLinked((prev) => !prev);
+  // }, []);
+    const onLike = useCallback(() => {
+        dispatch({
+            type: LIKE_POST_REQUEST,
+            data: post.id,
+        })
+    }, []);
+    const onUnLike = useCallback(() => {
+        dispatch({
+            type: UNLIKE_POST_REQUEST,
+            data: post.id,
+        })
+    },[]);
 
   const onToggleComment = useCallback(() => {
     setCommentFormOpend((prev) => !prev);
@@ -39,22 +51,22 @@ function PostCard({ post }) {
   },[])
 
   const id = useSelector((state) => state.user.me?.id);
-
+    const liked = post.Likers.find((v) => v.id === id );
   return (
     <div style={{ marginBottom: 10 }}>
       <Card
         cover={post.Images[0] && <PostImages images={post.Images} />}
         actions={[
           <RetweetOutlined key="retweet" />,
-          linked
+          liked
             ? (
               <HeartTwoTone
                 twoToneColor="#eb2f96"
                 key="heart"
-                onClick={onToggleLike}
+                onClick={onUnLike}
               />
             )
-            : <HeartOutlined key="heart" onClick={onToggleLike} />,
+            : <HeartOutlined key="heart" onClick={onLike} />,
           <MessageOutlined key="comment" onClick={onToggleComment} />,
           <Popover
             key="more"
@@ -111,9 +123,10 @@ PostCard.propTypes = {
     id: PropTypes.number,
     User: PropTypes.object,
     content: PropTypes.string,
-    createAt: PropTypes.object,
+    createAt: PropTypes.string,
     Comments: PropTypes.arrayOf(PropTypes.object),
     Images: PropTypes.arrayOf(PropTypes.object),
+    Likers: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
 };
 

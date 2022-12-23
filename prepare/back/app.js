@@ -4,8 +4,10 @@ const cors = require('cors');
 const session = require('express-session');
 const cookieParser = require('cookie-parser')
 const dotenv = require('dotenv');
+const morgan = require('morgan');
 
 const postRouter = require('./routes/post');
+const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
 const passportConfig = require('./passport');
 const passport = require("passport");
@@ -21,9 +23,12 @@ db.sequelize.sync()
 
 passportConfig();
 
+app.use(morgan('dev'));
+
 app.use(cors({
-    origin: '*',
-    credentials: false,
+    //origin: '*',
+    origin: 'http://localhost:3000',
+    credentials: true,
 }));
 
 // JSON형태로 Reqeust Body를 받기 위함.
@@ -39,8 +44,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-app.use('/post', postRouter);
 app.use('/user', userRouter);
+app.use('/post', postRouter);
+app.use('/posts', postsRouter);
+
 
 app.listen(3065, () => {
     console.log('서버 실행 중!');

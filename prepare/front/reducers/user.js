@@ -8,6 +8,9 @@ export const initialState = {
   unfollowLoading: false, // 언팔로우 시도중
   unfollowDone: false,
   unfollowError: null,
+  loadUserLoading: false, // 로그인 여부 확인 중
+  loadUserDone: false,
+  loadUserError: null,
   logInLoading: false, // 로그인 시도중
   logInDone: false,
   logInError: null,
@@ -24,6 +27,10 @@ export const initialState = {
   signUpdate: {},
   loginData: {},
 };
+
+export const LOAD_USER_REQUEST = 'LOAD_USER_REQUEST';
+export const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS';
+export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE';
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
@@ -109,6 +116,21 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case UNFOLLOW_FAILURE:
       draft.unfollowLoading = false;
       draft.unfollowError = action.error;
+      break;
+
+    case LOAD_USER_REQUEST:
+      draft.loadUserLoading = true;
+      draft.loadUserDone = false;
+      draft.loadUserError = null;
+      break;
+    case LOAD_USER_SUCCESS:
+      draft.loadUserLoading = false;
+      draft.loadUserDone = true;
+      draft.me = action.data;
+      break;
+    case LOAD_USER_FAILURE:
+      draft.loadUserLoading = false;
+      draft.loadUserError = action.error;
       break;
 
     case LOG_IN_REQUEST:
