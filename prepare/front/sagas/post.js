@@ -22,10 +22,6 @@ import {
 
 
 
-function removeCommentAPI(data) {
-  return axios.post(`/api/post/${data.id}/comment`, data);
-}
-
 function loadPostAPI(data) {
   return axios.get('/posts', data);
 }
@@ -67,14 +63,16 @@ function* addPost(action) {
   }
 }
 
+function removeCommentAPI(data) {
+  return axios.delete(`/post/${data}`);
+}
 function* removePost(action) {
   try {
-    // const result = yield call(addPostAPI, action.data);
+    const result = yield call(removeCommentAPI, action.data);
     console.log('saga removePost');
-    yield delay(1000);
     yield put({
       type: REMOVE_POST_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
     yield put({
       type: REMOVE_POST_OF_ME,

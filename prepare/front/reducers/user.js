@@ -56,14 +56,14 @@ export const UNFOLLOW_REQUEST = 'UNFOLLOW_REQUEST';
 export const UNFOLLOW_SUCCESS = 'UNFOLLOW_SUCCESS';
 export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE';
 
-const dummyUser = (data) => ({
+/*const dummyUser = (data) => ({
   ...data,
   nickname: 'darkkazma',
   id: 1,
   Posts: [{ id: 1 }],
   Followings: [{ nickname: '성낙훈' }],
   Followers: [{ nickname: 'godti' }],
-});
+});*/
 
 // 로그인 액션
 export const loginRequestAction = (email, password) => ({
@@ -188,6 +188,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
 
     case CHANGE_NICKNAME_SUCCESS:
+      draft.me.nickname = action.data.nickname;
       draft.changeNicknameLoading = false;
       draft.changeNicknameDone = true;
       break;

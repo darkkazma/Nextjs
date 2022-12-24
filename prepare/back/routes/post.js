@@ -92,9 +92,32 @@ router.delete('/:postId/like', async(req, res, next) => {
 });
 
 // 게시글 삭제
-router.delete('/', isLoggedIn, (req, res, next) => {
-
+router.delete('/:postId',  isLoggedIn, async (req, res, next) => {
+    try{
+        await Post.destroy({
+            where : {
+                id: req.params.postId,
+                userId : req.user.id,
+            },
+        });
+        res.json({ PostId: parseInt(req.params.postId) });
+    }catch(err){
+        console.error(err);
+        next(err);
+    }
 });
+
+// router.delete('/:postId',  isLoggedIn, async (req, res, next) => {
+//     try{
+//         await Post.destroy({
+//             where : { id: req.params.postId },
+//         });
+//         res.json({ PostId: req.params.postId });
+//     }catch(err){
+//         console.error(err);
+//         next(err);
+//     }
+// });
 
 module.exports = router;
 
