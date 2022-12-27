@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, {useCallback, useEffect} from 'react';
 import { Avatar, Button, Card } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
 import { logoutRequestAction } from "../reducers/user";
@@ -6,11 +6,12 @@ import { logoutRequestAction } from "../reducers/user";
 // eslint-disable-next-line react/prop-types
 const UserProfile = () => {
   const dispatch = useDispatch();
-  const {me, logOutLoading} = useSelector((state) => state.user);
+  const { me, logOutLoading } = useSelector((state) => state.user);
 
   const onLogOut = useCallback(() => {
     dispatch(logoutRequestAction());
-  }, [])
+  }, []);
+
   return (<>
     <Card
         actions={[<div key="twit">짹짹 <br/>{me.Posts.length}</div>,

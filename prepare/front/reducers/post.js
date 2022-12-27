@@ -12,6 +12,9 @@ export const initialState = {
   unlikePostLoading: false,
   unlikePostDone: false,
   unlikePostError: null,
+  uploadImagesLoading: false,
+  uploadImagesDone: false,
+  uploadImagesError: null,
   loadPostLoading: false,
   loadPostDone: false,
   loadPostError: null,
@@ -21,6 +24,9 @@ export const initialState = {
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
+  reTweetLoading: false,
+  reTweetDone: false,
+  reTweetError: null,
 };
 
 faker.seed(123);
@@ -47,6 +53,10 @@ faker.seed(123);
 
 
 //initialState.mainPosts = initialState.mainPosts.concat( generateDummyPost(10) );
+
+export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
+export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
+export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
 
 export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
 export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
@@ -75,6 +85,13 @@ export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
 export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
 export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
+
+export const REMOVE_IMAGE = 'REMOVE_IMAGE';
+
+export const RETWEET_REQUEST = 'RETWEET_REQUEST';
+export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
+export const RETWEET_FAILURE = 'RETWEET_FAILURE';
+
 
 export const addPost = (data) => ({
   type: ADD_POST_REQUEST, data,
@@ -108,6 +125,44 @@ const reducer = (state = initialState, action) => {
   // redux => 이전 상태를 액션을 통해 다음 상태로 만들어내는 함수(불변성은 지키면서...)
   return produce(state, (draft) => {
     switch (action.type) {
+      case RETWEET_REQUEST:
+        draft.reTweetLoading = true;
+        draft.reTweetDone = false;
+        draft.reTweetError = null;
+        break;
+
+      case RETWEET_SUCCESS:
+        draft.reTweetLoading = false;
+        draft.reTweetDone = true;
+        draft.mainPosts.unshift(action.data);
+        break;
+
+      case RETWEET_FAILURE:
+        draft.reTweetLoading = false;
+        draft.reTweetError = action.error;
+        break;
+
+      case REMOVE_IMAGE:
+        draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
+        break;
+
+      case UPLOAD_IMAGES_REQUEST:
+        draft.uploadImagesLoading = true;
+        draft.uploadImagesDone = false;
+        draft.uploadImagesError = null;
+        break;
+
+      case UPLOAD_IMAGES_SUCCESS:
+        draft.imagePaths = action.data;
+        draft.uploadImagesLoading = false;
+        draft.uploadImagesDone = true;
+        break;
+
+      case UPLOAD_IMAGES_FAILURE:
+        draft.uploadImagesLoading = false;
+        draft.uploadImagesError = action.error;
+        break;
+
       case LIKE_POST_REQUEST:
         draft.likePostLoading = true;
         draft.likePostDone = false;
@@ -154,8 +209,8 @@ const reducer = (state = initialState, action) => {
       case LOAD_POST_SUCCESS:
         draft.loadPostLoading = false;
         draft.loadPostDone = true;
-        draft.mainPosts = action.data.concat(draft.mainPosts);
-        draft.hasMorePosts = draft.mainPosts.length < 50;
+        draft.mainPosts = draft.mainPosts.concat(action.data);
+        draft.hasMorePosts = draft.mainPosts.length === 10;
         break;
 
       case LOAD_POST_FAILURE:
@@ -173,6 +228,7 @@ const reducer = (state = initialState, action) => {
         draft.addPostLoading = false;
         draft.addPostDone = true;
         draft.mainPosts.unshift(action.data);
+        draft.imagePaths = [];  // 게시글 작성 이후 이미지 경로 초기화.
         break;
 
       case ADD_POST_FAILURE:

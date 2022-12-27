@@ -11,6 +11,7 @@ const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
 const passportConfig = require('./passport');
 const passport = require("passport");
+const path = require('path');
 
 dotenv.config();
 
@@ -30,6 +31,9 @@ app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true,
 }));
+
+// express static 경로 지정
+app.use('/', express.static(path.join(__dirname, 'uploads')));
 
 // JSON형태로 Reqeust Body를 받기 위함.
 app.use(express.json());
