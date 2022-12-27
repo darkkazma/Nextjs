@@ -13,6 +13,9 @@ import {
   LOAD_FOLLOWINGS_FAILURE,
   LOAD_FOLLOWINGS_REQUEST,
   LOAD_FOLLOWINGS_SUCCESS,
+  LOAD_MY_INFO_FAILURE,
+  LOAD_MY_INFO_REQUEST,
+  LOAD_MY_INFO_SUCCESS,
   LOAD_USER_FAILURE,
   LOAD_USER_REQUEST,
   LOAD_USER_SUCCESS,
@@ -87,26 +90,6 @@ function* unfollow(action) {
     yield put({
       type: UNFOLLOW_FAILURE,
       error: err.response.data,
-    });
-  }
-}
-
-function loadUserAPI() {
-  return axios.get('/user');
-}
-function* loadUser(action) {
-  try {
-    //fork는 비동기 함수 호출
-    //call은 동기 함수 호출
-    const result = yield call(loadUserAPI, action.data);
-    // yield delay(100);
-    yield put({
-      type: LOAD_USER_SUCCESS,
-      data: result.data,
-    });
-  } catch (err) {
-    yield put({
-      type: LOAD_USER_FAILURE, error: err.response.data,
     });
   }
 }
@@ -221,6 +204,46 @@ function* removeFollower(action) {
   }
 }
 
+function loadUserAPI(data) {
+  return axios.get(`/user/${data}`);
+}
+function* loadUser(action) {
+  try {
+    //fork는 비동기 함수 호출
+    //call은 동기 함수 호출
+    const result = yield call(loadUserAPI, action.data);
+    console.log( result );
+    // yield delay(100);
+    yield put({
+      type: LOAD_USER_SUCCESS,
+      data: result.data
+      ,
+    });
+  } catch (err) {
+    yield put({
+      type: LOAD_USER_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+function loadMyInfoAPI() {
+  return axios.get('/user');
+}
+function* loadMyInfo(action) {
+  try {
+    const result = yield call(loadMyInfoAPI, action.data);
+    yield put({
+      type: LOAD_MY_INFO_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: LOAD_MY_INFO_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 function* watchRemoveFollower() {
   yield takeLatest(REMOVE_FOLLOWER_REQUEST, removeFollower);
 }
@@ -257,8 +280,13 @@ function* watchSignUp() {
   yield takeLatest(SIGN_UP_REQUEST, signUp);
 }
 
+function* watchLoadMyInfo() {
+  yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
+
 export default function* userSage() {
   yield all([
+    fork(watchLoadMyInfo),
     fork(watchRemoveFollower),
     fork(watchLoadFollowers),
     fork(watchLoadFollowings),

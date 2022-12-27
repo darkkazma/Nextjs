@@ -240,5 +240,48 @@ router.delete('/:postId',  isLoggedIn, async (req, res, next) => {
 //     }
 // });
 
+
+router.get('/:postId', async(req, res, next) => {
+    try{
+        const post = await Post.findOne({
+            where: { id: parseInt(req.params.postId, 10) },
+        });
+        if(!post){
+            return res.status(404).json('존재하지 않는 게시글 입니다.');
+        }
+        const fullPost = await Post.findOne({
+            where: { id: post.id },
+            include: [{
+                model: Post,
+                as: 'Retweet',
+                include: [{
+                    model: User,
+                    attributes: ['id', 'nickname'],
+                },{
+                    model: Image,
+                }]
+            },{
+                model: User,
+                attributes: ['id', 'nickname'],
+            },{
+              model :User,
+              as : 'Likers',
+              attributes : ['id', 'nickname'],
+            },{
+                model: Image,
+            },{
+                model: Comment,
+                include: [{
+                    model: User,
+                    attributes: ['id', 'nickname'],
+                }]
+            },{ model: User, as: 'Likers', attributes: ['id'] },]
+        });
+        res.status(200).json(fullPost);
+    }catch(err){
+        console.error(err);
+        next(err);
+    }
+});
 module.exports = router;
 

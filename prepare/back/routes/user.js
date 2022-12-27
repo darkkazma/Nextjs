@@ -5,7 +5,9 @@ const { User, Post } = require('../models');
 const passport = require('passport');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
+// 내 정보 가져오기
 router.get('/', async (req, res, next) => {
+    console.log( req.headers );
     try{
         if( req.user ) {
             const fullUserWithoutPassword = await User.findOne({
@@ -28,7 +30,37 @@ router.get('/', async (req, res, next) => {
         console.error(err);
         next(err);
     }
-})
+});
+
+// 다른 사용자 정보 가져오기
+router.get('/:userId', async (req, res, next) => {
+    try{
+        const fullUserWithoutPassword = await User.findOne({
+            where: { id: parseInt(req.params.userId, 10) },
+            attributes: {
+                exclude: ['password']
+            },
+            include: [
+                { model: Post, attributes: ['id'] },
+                { model: User , as: 'Followings', attributes: ['id'] },
+                { model: User , as: 'Followers', attributes: ['id'] },
+            ]
+        })
+
+        if( fullUserWithoutPassword) {
+            const data = fullUserWithoutPassword.toJSON();
+            data.Posts = data.Posts.length;
+            data.Followers = data.Followers.length;
+            data.Followings = data.Followings.length;
+            return res.status(200).json(data);
+        }else{
+            res.status(404).json('존재하지 않는 사용자 입니다.');
+        }
+    }catch(err){
+        console.error(err);
+        next(err);
+    }
+});
 
 router.post('/login', isNotLoggedIn, (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
@@ -92,7 +124,8 @@ router.post('/logout', isLoggedIn,  async (req, res, next)=> {
         req.logout((err) => {
             if (err) { return next(err); }
             req.session.destroy();
-            res.redirect('/');
+            //res.redirect('/');
+            res.status(200).json("OK");
         });
     }catch(err){
         console.error(err);
