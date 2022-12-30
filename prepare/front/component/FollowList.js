@@ -18,10 +18,10 @@ const FollowList = ({ headers, data }) => {
   return (
     <List
       style={{ marginBottom: 20 }}
-      grid={{ gutter:4, ms:2, md:3}}
+      grid={{ gutter: 4, ms: 2, md: 3 }}
       size="small"
       header={<div>{headers}</div>}
-      loadMore={<div style={{ textAlign: 'center', margin: '10px 0'}}><Button>더보기</Button></div>}
+      loadMore={<div style={{ textAlign: 'center', margin: '10px 0' }}><Button>더보기</Button></div>}
       bordered
       dataSource={data}
       renderItem={(item) => (

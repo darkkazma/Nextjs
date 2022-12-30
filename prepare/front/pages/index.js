@@ -21,8 +21,6 @@ function Home() {
   }, [reTweetError]);
 
   useEffect(() => {
-    console.log('index.js 의 useEffect 실행. ');
-
     function onScroll() {
       // eslint-disable-next-line max-len
       if (

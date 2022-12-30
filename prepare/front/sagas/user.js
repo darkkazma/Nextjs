@@ -1,6 +1,7 @@
 import { all, fork, put, takeLatest, delay, call } from 'redux-saga/effects';
 import axios from 'axios';
 import {
+  CHANGE_MENU_REQUEST,
   CHANGE_NICKNAME_FAILURE,
   CHANGE_NICKNAME_REQUEST,
   CHANGE_NICKNAME_SUCCESS,
@@ -44,9 +45,7 @@ function signUpAPI(data) {
 }
 function* signUp(action) {
   try {
-    const result = yield call(signUpAPI, action.data);
-    console.log( result );
-
+    yield call(signUpAPI, action.data);
     yield put({
       type: SIGN_UP_SUCCESS,
     });
@@ -212,7 +211,6 @@ function* loadUser(action) {
     //fork는 비동기 함수 호출
     //call은 동기 함수 호출
     const result = yield call(loadUserAPI, action.data);
-    console.log( result );
     // yield delay(100);
     yield put({
       type: LOAD_USER_SUCCESS,
@@ -236,6 +234,23 @@ function* loadMyInfo(action) {
       type: LOAD_MY_INFO_SUCCESS,
       data: result.data,
     });
+  } catch (err) {
+    yield put({
+      type: LOAD_MY_INFO_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function changeMenuAPI(data) {
+  console.log('changeMenuAPI => ', data);
+  return 'success';
+}
+function* changeMenu(action) {
+  try {
+    console.log(action);
+    const result = yield call(changeMenuAPI, action.data);
+    console.log(result);
   } catch (err) {
     yield put({
       type: LOAD_MY_INFO_FAILURE,
@@ -284,6 +299,10 @@ function* watchLoadMyInfo() {
   yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
 
+function* watchChangeMenu() {
+  yield takeLatest(CHANGE_MENU_REQUEST, changeMenu);
+}
+
 export default function* userSage() {
   yield all([
     fork(watchLoadMyInfo),
@@ -297,5 +316,6 @@ export default function* userSage() {
     fork(watchSignUp),
     fork(watchFollow),
     fork(watchUnfollow),
+    //fork(watchChangeMenu),
   ]);
 }

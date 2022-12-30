@@ -3,10 +3,10 @@ dotenv.config();
 
 module.exports = {
   "development": {
-    "username": "root",
+    "username": "darkkazma",
     "password": process.env.DB_PASSWORD,
-    "database": "react-nodebird",
-    "host": "127.0.0.1",
+    "database": "nodebird",
+    "host": "192.168.110.79",
     "port": 3306,
     "dialect": "mysql"
   },

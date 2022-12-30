@@ -19,14 +19,14 @@ const Profile = () => {
   const dispatch = useDispatch();
   const { me, logOutDone } = useSelector((state) => state.user);
 
-  useEffect(() => {
+/*  useEffect(() => {
     dispatch({
       type: LOAD_FOLLOWERS_REQUEST,
     });
     dispatch({
       type: LOAD_FOLLOWINGS_REQUEST,
     });
-  }, []);
+  }, [me]);*/
 
   useEffect(() => {
     if (logOutDone) {

@@ -39,7 +39,7 @@ function LoginForm() {
         <br />
         <Input
           name="user-email"
-          type="email"
+          type="text"
           value={email}
           onChange={onChangeEmail}
           required

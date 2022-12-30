@@ -1,21 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Checkbox, Form, Input, Modal, notification } from 'antd';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
-import axios from 'axios';
-import { END } from 'redux-saga';
 import AppLayout from '../component/AppLayout';
 import useInput from '../hooks/useInput';
-import { LOAD_MY_INFO_REQUEST, SIGN_UP_REQUEST } from '../reducers/user';
-import wrapper from '../store/configureStore';
+import { SIGN_UP_REQUEST } from '../reducers/user';
 
 const ErrorMessage = styled.div`
   color: red;
 `;
 
 const Signup = () => {
+  const [modal, contextHolder] = Modal.useModal();
   const dispatch = useDispatch();
   const { signUpLoading, signUpDone, signUpError, me } = useSelector(
     (state) => state.user,
@@ -23,19 +21,22 @@ const Signup = () => {
 
   useEffect(() => {
     if (me && me.id) {
-      Router.replace('/').then((r) => console.log('ok', r));
+      Router.replace('/').then();
     }
   }, [me && me.id]);
 
   useEffect(() => {
     if (signUpDone) {
-      Router.push('/');
+      Router.push('/').then();
     }
   }, [signUpDone]);
 
   useEffect(() => {
     if (signUpError) {
-      alert(signUpError);
+      notification.error({
+        message: '회원 가입 오류',
+        description: signUpError,
+      });
     }
   }, [signUpError]);
 
@@ -110,7 +111,7 @@ const Signup = () => {
               name="user-pwd"
               type="password"
               value={password}
-              required={true}
+              required
               onChange={onChangePassword}
             />
           </div>
@@ -141,28 +142,11 @@ const Signup = () => {
               가입하기
             </Button>
           </div>
+          {contextHolder}
         </Form>
       </AppLayout>
     </>
   );
 };
-
-/*export const getServerSideProps = wrapper.getServerSideProps(
-  async (context) => {
-    console.log('getServerSideProps start');
-    const cookie = context.req ? context.req.headers.cookie : '';
-    axios.defaults.headers.Cookie = '';
-    if (context.req && cookie) {
-      axios.defaults.headers.Cookie = cookie;
-    }
-    context.store.dispatch({
-      type: LOAD_MY_INFO_REQUEST,
-    });
-    // dispatch가 완료되기 까지 기다린 후 결과를 리턴하게 바꿔야 한다. redux-saga 의 END
-    context.store.dispatch(END);
-    console.log('getServerSideProps end');
-    await context.store.sagaTask.toPromise();
-  },
-);*/
 
 export default Signup;

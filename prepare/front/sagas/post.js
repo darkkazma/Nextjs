@@ -266,25 +266,25 @@ function* reTweet(action) {
 }
 
 function* watchUploadImages() {
-  yield throttle(5000, UPLOAD_IMAGES_REQUEST, uploadImages);
+  yield throttle(500, UPLOAD_IMAGES_REQUEST, uploadImages);
 }
 function* watchLikePost() {
-  yield throttle(5000, LIKE_POST_REQUEST, likePost);
+  yield throttle(500, LIKE_POST_REQUEST, likePost);
 }
 function* watchUnlikePost() {
-  yield throttle(5000, UNLIKE_POST_REQUEST, unlikePost);
+  yield throttle(500, UNLIKE_POST_REQUEST, unlikePost);
 }
 function* watchLoadPosts() {
-  yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
+  yield throttle(500, LOAD_POSTS_REQUEST, loadPosts);
 }
 function* watchLoadPost() {
-  yield throttle(5000, LOAD_POST_REQUEST, loadPost);
+  yield throttle(500, LOAD_POST_REQUEST, loadPost);
 }
 function* watchLoadUserPosts() {
-  yield throttle(5000, LOAD_USER_POSTS_REQUEST, loadUserPosts);
+  yield throttle(500, LOAD_USER_POSTS_REQUEST, loadUserPosts);
 }
 function* watchLoadHashtagPosts() {
-  yield throttle(5000, LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
+  yield throttle(500, LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
 }
 function* watchAddPost() {
   yield takeLatest(ADD_POST_REQUEST, addPost);

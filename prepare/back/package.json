@@ -20,10 +20,22 @@
     "mysql2": "^2.3.3",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
+    "prettier": "^2.8.1",
     "sequelize": "^6.28.0",
     "sequelize-cli": "^6.5.2"
   },
   "devDependencies": {
+    "eslint": "^8.30.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
     "nodemon": "^2.0.20"
+  },
+  "prettier": {
+    "bracketSpacing": true,
+    "jsxBracketSameLine": true,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "tabWidth": 2
   }
 }

@@ -36,6 +36,7 @@ export const initialState = {
   removeFollowerDone: false,
   removeFollowerError: null,
   me: null,
+  currentMenu: null,
 };
 export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
 export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS';
@@ -79,6 +80,8 @@ export const LOAD_FOLLOWINGS_FAILURE = 'LOAD_FOLLOWINGS_FAILURE';
 export const REMOVE_FOLLOWER_REQUEST = 'REMOVE_FOLLOWER_REQUEST';
 export const REMOVE_FOLLOWER_SUCCESS = 'REMOVE_FOLLOWER_SUCCESS';
 export const REMOVE_FOLLOWER_FAILURE = 'REMOVE_FOLLOWER_FAILURE';
+
+export const CHANGE_MENU_REQUEST = 'CHANGE_MENU_REQUEST';
 
 /*const dummyUser = (data) => ({
   ...data,
@@ -303,6 +306,11 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     //     Posts: state.me.Posts.filter((v) => v.id !== action.data ),
     //   }
     // }
+    case CHANGE_MENU_REQUEST:
+      console.log('CHANGE_MENU_REQUEST => ', action.data);
+      draft.currentMenu = action.data;
+      break;
+
     default:
       break;
   }

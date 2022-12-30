@@ -19,11 +19,11 @@ function FollowerList({ headers, data }) {
       grid={{ gutter: 4, ms: 2, md: 3 }}
       size="small"
       header={<div>{headers}</div>}
-      loadMore={
+      loadMore={(
         <div style={{ textAlign: 'center', margin: '10px 0' }}>
           <Button>더보기</Button>
         </div>
-      }
+      )}
       bordered
       dataSource={data}
       renderItem={(item) => (
